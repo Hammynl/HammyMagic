@@ -9,9 +9,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.github.hammynl.hammymagic.Magic;
 import com.github.hammynl.hammymagic.utils.CooldownUtil;
+import com.github.hammynl.hammymagic.utils.SwitchUtil;
 
 public class Teleport implements Listener {
 	
@@ -20,10 +22,12 @@ public class Teleport implements Listener {
 	@EventHandler
 	public void WizardWandTeleport(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
+		ItemStack MainItem = p.getInventory().getItemInMainHand();
+
 		// Checks if the player is performing a right click, Is holding a blaze rod. Has a correct name on the blaze rod and is not on cooldown.
 		boolean passedAllChecks = (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) 
-				&& p.getInventory().getItemInMainHand().getType() == Material.BLAZE_ROD 
-				&& p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals(plugin.changeColor("&d&o&lWizard Wand &7[Teleport]"))
+				&& MainItem.getType() == Material.BLAZE_ROD 
+				&& MainItem.getItemMeta().getDisplayName().equals(plugin.changeColor(plugin.getConfString(SwitchUtil.TELEPORT.getName())))
 				&& !plugin.isDisabledWorld(p)
 				&& !CooldownUtil.StorageWizardWand.containsKey(p.getUniqueId());
 		

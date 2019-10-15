@@ -1,7 +1,6 @@
 package com.github.hammynl.hammymagic;
 
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,8 +10,15 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.hammynl.hammymagic.commands.MagicCommand;
-import com.github.hammynl.hammymagic.spells.*;
-import com.github.hammynl.hammymagic.utils.*;
+import com.github.hammynl.hammymagic.spells.Barrage;
+import com.github.hammynl.hammymagic.spells.Escape;
+import com.github.hammynl.hammymagic.spells.Fireball;
+import com.github.hammynl.hammymagic.spells.Lightning;
+import com.github.hammynl.hammymagic.spells.Spark;
+import com.github.hammynl.hammymagic.spells.Teleport;
+import com.github.hammynl.hammymagic.spells.Thunderball;
+import com.github.hammynl.hammymagic.utils.CooldownUtil;
+import com.github.hammynl.hammymagic.utils.SpellSwitch;
 
 public class Magic extends JavaPlugin implements Listener {
 
@@ -22,13 +28,12 @@ public class Magic extends JavaPlugin implements Listener {
 	public void onEnable() {
 		@SuppressWarnings("unused")
 		MetricsLite metrics = new MetricsLite(this);
-		
 		setupLangFile();
 		registerCommands();
 		registerEvents();
 		saveDefaultConfig();
 	}
-
+	
 	public int getConfInt(String bool) {
 		return getConfig().getInt(bool);
 	}
@@ -55,6 +60,7 @@ public class Magic extends JavaPlugin implements Listener {
 		PluginManager.registerEvents(new Barrage(), this);
 		PluginManager.registerEvents(new CooldownUtil(), this);
 		PluginManager.registerEvents(new Thunderball(), this);
+		PluginManager.registerEvents(new Spark(), this);
 	}
 
 	public boolean isDisabledWorld(Player p) {

@@ -32,6 +32,6 @@ public class CooldownUtil implements Listener {
 				if(plugin.getConfBool("wizardwand.cooldown.options.effect")) p.getEyeLocation().getWorld().playEffect(p.getLocation(), Effect.valueOf(plugin.getConfString("wizardwand.cooldown.values.effect")), 1);
 				this.cancel();
 			}
-		}.runTaskTimerAsynchronously(plugin, plugin.getConfInt("wizardwand.cooldown.values.length") * 20, plugin.getConfInt("wizardwand.cooldown.values.length") * 20); 
+		}.runTaskTimer(plugin, plugin.getConfInt("wizardwand.cooldown.values.length") * 20, plugin.getConfInt("wizardwand.cooldown.values.length") * 20); 
 	}
 }

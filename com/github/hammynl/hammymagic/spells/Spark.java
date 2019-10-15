@@ -1,11 +1,13 @@
 package com.github.hammynl.hammymagic.spells;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -17,38 +19,40 @@ import com.github.hammynl.hammymagic.Magic;
 import com.github.hammynl.hammymagic.utils.CooldownUtil;
 import com.github.hammynl.hammymagic.utils.SwitchUtil;
 
-public class Escape implements Listener {
-
+public class Spark implements Listener {
+	
+	public HashMap<UUID, Integer> seconds = new HashMap<UUID, Integer>();
 	private Magic plugin = Magic.getPlugin(Magic.class);
 
-	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void WizardWandEscape(PlayerInteractEvent e) {
+	public void WizardWandThunderball(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
+		UUID uuid = p.getUniqueId();
 		ItemStack MainItem = p.getInventory().getItemInMainHand();
 
 		// Checks if the player is performing a right click, Is holding a blaze rod. Has a correct name on the blaze rod and is not on cooldown.
 		boolean passedAllChecks = (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) 
 				&& MainItem.getType() == Material.BLAZE_ROD 
-				&& MainItem.getItemMeta().getDisplayName().equals(plugin.changeColor(plugin.getConfString(SwitchUtil.ESCAPE.getName())))
+				&& MainItem.getItemMeta().getDisplayName().equals(plugin.changeColor(plugin.getConfString(SwitchUtil.SPARK.getName())))
 				&& !plugin.isDisabledWorld(p)
 				&& !CooldownUtil.StorageWizardWand.containsKey(p.getUniqueId());
 		
 		if(passedAllChecks) {
 			CooldownUtil.CooldownWizardWand(p);
-			Snowball snowball = (Snowball) p.launchProjectile(Snowball.class);
-			snowball.setVelocity(p.getLocation().getDirection().multiply(2));
-			snowball.setPassenger(p);
-			p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
+			Location loc = p.getTargetBlock(null, 20).getLocation().add(0, 1, 0);
+			p.playSound(loc, Sound.BLOCK_LAVA_AMBIENT, 1, 1);
+			seconds.put(uuid, 0);
 			new BukkitRunnable() {
-				@Override
 				public void run() {
-					if (snowball.isDead())
+					seconds.put(uuid, seconds.get(uuid) + 1);
+					loc.getWorld().spawnParticle(Particle.BLOCK_DUST, loc, 1, Material.REDSTONE_BLOCK.createBlockData());
+					loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 0);
+					
+					if(seconds.get(uuid) > 50) {
+						seconds.remove(uuid);
+						loc.getWorld().createExplosion(loc, 8.0F);
 						this.cancel();
-					Location loc = snowball.getLocation();
-					loc.getWorld().spawnParticle(Particle.SNOWBALL, loc, 1);
-					loc.getWorld().spawnParticle(Particle.SNOWBALL, loc, 1);
-					loc.getWorld().spawnParticle(Particle.SNOWBALL, loc, 1);
+					}
 				}
 			}.runTaskTimer(plugin, 0, 1);
 		}
