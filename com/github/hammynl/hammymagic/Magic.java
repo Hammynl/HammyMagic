@@ -2,6 +2,7 @@ package com.github.hammynl.hammymagic;
 
 import java.util.ArrayList;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -27,7 +28,7 @@ public class Magic extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		@SuppressWarnings("unused")
-		MetricsLite metrics = new MetricsLite(this);
+		Metrics metrics = new Metrics(this);
 		setupLangFile();
 		registerCommands();
 		registerEvents();

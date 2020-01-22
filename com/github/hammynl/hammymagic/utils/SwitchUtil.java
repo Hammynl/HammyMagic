@@ -7,7 +7,8 @@ public enum SwitchUtil {
 		LIGHTNING("spell-names.lightning"),
 		TELEPORT("spell-names.teleport"),
 		THUNDERBALL("spell-names.thunderball"),
-		SPARK("spell-names.spark");
+		SPARK("spell-names.spark"),
+		PROTECT("spell-names.protect");
 		
 		
 		private final String code;

@@ -29,7 +29,7 @@ public class MagicCommand implements CommandExecutor {
 	    item.setItemMeta(itemmeta);
 	    return item;
 	}
-	
+
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player)) return true;
 		
